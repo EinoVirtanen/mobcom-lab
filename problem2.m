@@ -1,10 +1,10 @@
-
+clc
 close all
-% use different signal powers
-mc = 1e4;
+clear
+
+mc = 1e5; %MonteCarlo
 
 SNR = 0:0.5:5; %dB
-N=100; %length of channel
 
 P1=zeros(1, length(SNR));
 P2=zeros(1, length(SNR));
@@ -12,7 +12,6 @@ P3=zeros(1, length(SNR));
 
 P31=zeros(1, length(SNR));
 P32=zeros(1, length(SNR));
-P33=zeros(1, length(SNR));
 P34=zeros(1, length(SNR));
 P35=zeros(1, length(SNR));
 
@@ -20,9 +19,11 @@ for j=1:mc
     %% Problem 2
     %case 1
     for SNRi = 1:length(SNR);
-        h1=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
-        h2=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
-        
+%         h1=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
+%         h2=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
+        h1=(randn(1,1)+randn(1,1)*sqrt(-1));
+        h2=(randn(1,1)+randn(1,1)*sqrt(-1));
+          
         h = [h1 h2];
 
         if (sum(abs(h).^2)*SNR(SNRi)<1)
@@ -32,8 +33,8 @@ for j=1:mc
     
     %case 2
     for SNRi = 1:length(SNR);
-        h1=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
-        h2=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2)*(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
+        h1=(randn(1,1)+randn(1,1)*sqrt(-1));
+        h2=(randn(1,1)+randn(1,1)*sqrt(-1))*(randn(1,1)+randn(1,1)*sqrt(-1));
         
         h = [h1 h2];
 
@@ -44,8 +45,8 @@ for j=1:mc
     
     %case 3
     for SNRi = 1:length(SNR);
-        h1=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
-        h2=((randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2)+(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2))/2;
+        h1=(randn(1,1)+randn(1,1)*sqrt(-1));
+        h2=((randn(1,1)+randn(1,1)*sqrt(-1))+(randn(1,1)+randn(1,1)*sqrt(-1)))/2;
         
         h = [h1 h2];
 
@@ -57,8 +58,8 @@ for j=1:mc
     %% problem 3
     %case 1
     for SNRi = 1:length(SNR);
-        h1=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
-        h2=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
+        h1=(randn(1,1)+randn(1,1)*sqrt(-1));
+        h2=(randn(1,1)+randn(1,1)*sqrt(-1));
         
         h = [h1 h2].';
 
@@ -69,9 +70,9 @@ for j=1:mc
     
     %case 2 and 3
     for SNRi = 1:length(SNR);
-        h1=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
-        h2=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
-        h3=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
+        h1=(randn(1,1)+randn(1,1)*sqrt(-1));
+        h2=(randn(1,1)+randn(1,1)*sqrt(-1));
+        h3=(randn(1,1)+randn(1,1)*sqrt(-1));
         
         h = [h1 h2 h3].';
 
@@ -85,7 +86,7 @@ for j=1:mc
         
         h = [];
         for loop=1:10
-            h = [h (randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2)];
+            h = [h (randn(1,1)+randn(1,1)*sqrt(-1))];
         end
         
         if (sum(abs(h).^2)*SNR(SNRi)<1)
@@ -96,7 +97,7 @@ for j=1:mc
     %case 5
     for SNRi = 1:length(SNR);
         
-        h1=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
+        h1=(randn(1,1)+randn(1,1)*sqrt(-1));
         h = [];
         for loop=1:15
             h = [h h1];
@@ -126,13 +127,13 @@ semilogy(SNR, P3);
 ylabel('Probability of deep fade')
 xlabel('SNR (dB)')
 grid on;
+lgd=legend('$h_2=h_2$', '$h_2=h_1 h_3$', '$h_2 =\frac{1}{2}(h_1+h_3)$' );
+set(lgd,'Interpreter','latex');
 
 figure('NumberTitle','off','Name','Problem 3');
 semilogy(SNR, P31);
 hold on
 semilogy(SNR, P32);
-hold on
-semilogy(SNR, P33);
 hold on
 semilogy(SNR, P34);
 hold on
@@ -140,6 +141,4 @@ semilogy(SNR, P35);
 ylabel('Probability of deep fade')
 xlabel('SNR (dB)')
 grid on;
-legend('2x1', '3x1', '1x10', '15x1')
-
-
+legend('2x1', '3x1 and 1x3', '1x10', '15x1 (all the same)')
