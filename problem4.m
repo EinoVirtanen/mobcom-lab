@@ -4,8 +4,7 @@ clear
 
 %% 4
 %1st question
-x=0:0.0001:3;
-%densGauss = 1/sqrt(2*pi)*exp(-(x).^2);
+x=0:0.00001:4;
 expApprox=exp(-(x.^2)./2);
 figure, plot(x, qfunc(x));
 hold on;
@@ -15,10 +14,14 @@ plot(x, abs(expApprox-qfunc(x)), '--');
 grid on;
 lgd=legend('Q(x)', '$e^{-x^2/2}$', '$|Q(x) - e^{-x^2/2}|$' );
 set(lgd,'Interpreter','latex');
+xlabel('x')
+% densGauss = 1/sqrt(2*pi)*exp((-(x).^2));
+% figure, plot(x, densGauss);
+% hold on;
+% plot (x, x.*exp(-(x.^2)./2));
 
 %2nd question
-smallerThan = 0.01:0.01:2;
-%smallerThan = fliplr(smallerThan);
+smallerThan = 0.01:0.001:2;
 results=zeros(1, length(smallerThan));
 
 rep=5000;
@@ -82,7 +85,7 @@ set(lgd,'Interpreter','latex');
 
 %4th question
 k=1:3;
-rep=5000;
+rep=50000;
 smallerThan = 0.01:0.01:2;
 results=zeros(length(k), length(smallerThan));
 
@@ -90,13 +93,10 @@ figure;
 for t=1:length(k)
     
     for i=1:rep
-       %htest = chi2rnd(2*k(t)*ones(1,k(t))); %[2k 2k 2k ... as dof] k times
-     
-        htest = chi2rnd(2*k(t));
+        hSqtest = chi2rnd(2*k(t));
         for j=1:length(smallerThan);
-            if((sum(htest.^2))<smallerThan(j))
-                results(t,j)=results(t,j)+1;
-               
+            if(hSqtest<smallerThan(j))
+                results(t,j)=results(t,j)+1;               
             end
         end
     end
@@ -105,3 +105,22 @@ for t=1:length(k)
     
 end
 legend('k=1', 'k=2', 'k=3');
+
+ figure, plot(smallerThan, gammainc(smallerThan./2,k(1),'lower'));
+ hold on;
+%  plot(smallerThan, results(1,:)./rep, '--');
+%  hold on;
+ plot(smallerThan, smallerThan.^k(1))
+ 
+figure, plot(smallerThan, gammainc(smallerThan./2,k(2),'lower'));
+axis([-inf inf 0 0.7]);
+hold on;
+% plot(smallerThan, results(3,:)./rep);
+plot(smallerThan, smallerThan.^k(2))
+
+
+figure, plot(smallerThan, gammainc(smallerThan./2,k(3),'lower'));
+axis([-inf inf 0 0.7]);
+hold on;
+% plot(smallerThan, results(3,:)./rep);
+plot(smallerThan, smallerThan.^k(3))

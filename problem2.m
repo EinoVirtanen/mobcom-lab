@@ -4,7 +4,7 @@ clear
 
 mc = 1e5; %MonteCarlo
 
-SNR = 0:0.5:5; %dB
+SNR = 0:0.5:10; %dB
 
 P1=zeros(1, length(SNR));
 P2=zeros(1, length(SNR));
@@ -18,43 +18,43 @@ P35=zeros(1, length(SNR));
 for j=1:mc
     %% Problem 2
     %case 1
-    for SNRi = 1:length(SNR);
-%         h1=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
-%         h2=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
-        h1=(randn(1,1)+randn(1,1)*sqrt(-1));
-        h2=(randn(1,1)+randn(1,1)*sqrt(-1));
-          
-        h = [h1 h2];
-
-        if (sum(abs(h).^2)*SNR(SNRi)<1)
-            P1(SNRi)=P1(SNRi)+1;
-        end
-    end
-    
-    %case 2
-    for SNRi = 1:length(SNR);
-        h1=(randn(1,1)+randn(1,1)*sqrt(-1));
-        h2=(randn(1,1)+randn(1,1)*sqrt(-1))*(randn(1,1)+randn(1,1)*sqrt(-1));
-        
-        h = [h1 h2];
-
-        if (sum(abs(h).^2)*SNR(SNRi)<1)
-            P2(SNRi)=P2(SNRi)+1;
-        end
-    end
-    
-    %case 3
-    for SNRi = 1:length(SNR);
-        h1=(randn(1,1)+randn(1,1)*sqrt(-1));
-        h2=((randn(1,1)+randn(1,1)*sqrt(-1))+(randn(1,1)+randn(1,1)*sqrt(-1)))/2;
-        
-        h = [h1 h2];
-
-        if (sum(abs(h).^2)*SNR(SNRi)<1)
-            P3(SNRi)=P3(SNRi)+1;
-        end
-    end
-    
+%     for SNRi = 1:length(SNR);
+% %         h1=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
+% %         h2=(randn(1,1)+randn(1,1)*sqrt(-1))/sqrt(2);
+%         h1=(randn(1,1)+randn(1,1)*sqrt(-1));
+%         h2=(randn(1,1)+randn(1,1)*sqrt(-1));
+%           
+%         h = [h1 h2];
+% 
+%         if (sum(abs(h).^2)*SNR(SNRi)<1)
+%             P1(SNRi)=P1(SNRi)+1;
+%         end
+%     end
+%     
+%     %case 2
+%     for SNRi = 1:length(SNR);
+%         h1=(randn(1,1)+randn(1,1)*sqrt(-1));
+%         h2=(randn(1,1)+randn(1,1)*sqrt(-1))*(randn(1,1)+randn(1,1)*sqrt(-1));
+%         
+%         h = [h1 h2];
+% 
+%         if (sum(abs(h).^2)*SNR(SNRi)<1)
+%             P2(SNRi)=P2(SNRi)+1;
+%         end
+%     end
+%     
+%     %case 3
+%     for SNRi = 1:length(SNR);
+%         h1=(randn(1,1)+randn(1,1)*sqrt(-1));
+%         h2=((randn(1,1)+randn(1,1)*sqrt(-1))+(randn(1,1)+randn(1,1)*sqrt(-1)))/2;
+%         
+%         h = [h1 h2];
+% 
+%         if (sum(abs(h).^2)*SNR(SNRi)<1)
+%             P3(SNRi)=P3(SNRi)+1;
+%         end
+%     end
+%     
     %% problem 3
     %case 1
     for SNRi = 1:length(SNR);
