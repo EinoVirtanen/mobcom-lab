@@ -4,7 +4,7 @@ clear
 
 %% 4
 %1st question
-x=0:0.00001:4;
+x=0:0.00001:10;
 expApprox=exp(-(x.^2)./2);
 figure, plot(x, qfunc(x));
 hold on;
