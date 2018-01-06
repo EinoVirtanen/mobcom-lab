@@ -2,7 +2,7 @@ clc
 close all
 clear
 
-mc = 1e4; %MonteCarlo
+mc = 1e5; %MonteCarlo
 
 SNR = 0:0.5:10; %dB
 
@@ -24,7 +24,7 @@ for j=1:mc
           
         h = [h1 h2];
 
-        if (sum(abs(h).^2)*SNR(SNRi)<1)
+        if (sum(abs(h).^2)*10^(SNR(SNRi)/10)<1)
             P1(SNRi)=P1(SNRi)+1;
         end
     end
@@ -36,7 +36,7 @@ for j=1:mc
         
         h = [h1 h2];
 
-        if (sum(abs(h).^2)*SNR(SNRi)<1)
+        if (sum(abs(h).^2)*10^(SNR(SNRi)/10)<1)
             P2(SNRi)=P2(SNRi)+1;
         end
     end
@@ -48,7 +48,7 @@ for j=1:mc
         
         h = [h1 h2];
 
-        if (sum(abs(h).^2)*SNR(SNRi)<1)
+        if (sum(abs(h).^2)*10^(SNR(SNRi)/10)<1)
             P3(SNRi)=P3(SNRi)+1;
         end
     end
@@ -117,11 +117,11 @@ P34=P34./mc;
 P35=P35./mc;
 
 figure('NumberTitle','off','Name','Problem 2, case 1,2,3');
-semilogy(SNR, P1,'b');
+semilogy(SNR, P1);
 hold on
-semilogy(SNR, P2,'r');
+semilogy(SNR, P2);
 hold on
-semilogy(SNR, P3,'g');
+semilogy(SNR, P3);
 ylabel('Probability of deep fade')
 xlabel('SNR (dB)')
 grid on;
@@ -129,14 +129,14 @@ lgd=legend('$h_2=h_2$', '$h_2=h_1 h_3$', '$h_2 =\frac{1}{2}(h_1+h_3)$' );
 set(lgd,'Interpreter','latex');
 
 figure('NumberTitle','off','Name','Problem 3');
-semilogy(SNR, P31, 'b');
+semilogy(SNR, P31);
 hold on
-semilogy(SNR, P32, 'r');
+semilogy(SNR, P32);
 hold on
-semilogy(SNR, P34, 'g');
+semilogy(SNR, P35);
 hold on
-semilogy(SNR, P35, 'y');
+semilogy(SNR, P34);
 ylabel('Probability of deep fade')
 xlabel('SNR (dB)')
 grid on;
-legend('2x1', '3x1 and 1x3', '1x10', '15x1 (all the same)')
+legend('2x1', '3x1 and 1x3', '15x1 (all the same)', '1x10' )

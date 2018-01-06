@@ -10,11 +10,12 @@ figure, plot(x, qfunc(x));
 hold on;
 plot(x, expApprox);
 hold on;
-plot(x, abs(expApprox-qfunc(x)), '--');
+plot(x, abs(expApprox-qfunc(x)), 'k--');
 grid on;
 lgd=legend('Q(x)', '$e^{-x^2/2}$', '$|Q(x) - e^{-x^2/2}|$' );
 set(lgd,'Interpreter','latex');
 xlabel('x')
+%daspect([1 1 2])
 % densGauss = 1/sqrt(2*pi)*exp((-(x).^2));
 % figure, plot(x, densGauss);
 % hold on;
@@ -24,7 +25,7 @@ xlabel('x')
 smallerThan = 0.01:0.001:2;
 results=zeros(1, length(smallerThan));
 
-rep=5000;
+rep=10000;
 % 
 % hArray=[];
 % for i=1:rep 
@@ -49,11 +50,11 @@ figure, plot(smallerThan, results./rep);
 hold on;
 plot(smallerThan, smallerThan);
 hold on;
-plot(smallerThan, abs(results./rep-smallerThan), '--');
+plot(smallerThan, abs(results./rep-smallerThan), 'k--');
 grid on;
 lgd=legend('$P(||h||^2<x)$', '$x$', '$|P(||h||^2<x) - x|$' );
 set(lgd,'Interpreter','latex');
-
+daspect([1 1 2]);
 %3rd question
 
 smallerThan = 0.1:0.1:100;
@@ -75,13 +76,14 @@ for i=1:rep
 end
         
 figure, plot(smallerThan, results./rep);
-hold on;
-plot(smallerThan, smallerThan);
-hold on;
-plot(smallerThan, abs(results./rep-smallerThan), '--');
+%hold on;
+% plot(smallerThan, smallerThan);
+% hold on;
+% plot(smallerThan, abs(results./rep-smallerThan), 'k--');
 grid on;
-lgd=legend('$P(||h||^2<x)$', '$x$', '$|P(||h||^2<x) - x|$' );
+lgd=legend('$P(||h||^2<x)$' );
 set(lgd,'Interpreter','latex');
+%daspect([1 1 2]);
 
 %4th question
 k=1:3;
@@ -108,19 +110,35 @@ legend('k=1', 'k=2', 'k=3');
 
  figure, plot(smallerThan, gammainc(smallerThan./2,k(1),'lower'));
  hold on;
-%  plot(smallerThan, results(1,:)./rep, '--');
+%plot(smallerThan, results(1,:)./rep, '--');
 %  hold on;
  plot(smallerThan, smallerThan.^k(1))
- 
+hold on;
+ plot(smallerThan, abs(smallerThan.^k(1)-gammainc(smallerThan./2,k(1),'lower')), '--k')
+ grid on;
+lgd=legend('$P(||h||^2<x)$', '$x$', '$|P(||h||^2<x) - x|$');
+set(lgd,'Interpreter','latex');
+daspect([1 1 2]);
+
 figure, plot(smallerThan, gammainc(smallerThan./2,k(2),'lower'));
 axis([-inf inf 0 0.7]);
 hold on;
-% plot(smallerThan, results(3,:)./rep);
+% plot(smallerThan, results(2,:)./rep);
 plot(smallerThan, smallerThan.^k(2))
-
+hold on;
+ plot(smallerThan, abs(smallerThan.^k(2)-gammainc(smallerThan./2,k(2),'lower')), '--k')
+ grid on;
+lgd=legend('$P(||h||^2<x)$', '$x^2$', '$|P(||h||^2<x) - x^2|$' );
+set(lgd,'Interpreter','latex');
+%daspect([1 1 2]);
 
 figure, plot(smallerThan, gammainc(smallerThan./2,k(3),'lower'));
 axis([-inf inf 0 0.7]);
 hold on;
-% plot(smallerThan, results(3,:)./rep);
+%plot(smallerThan, results(3,:)./rep);
 plot(smallerThan, smallerThan.^k(3))
+% hold on;
+% plot(smallerThan, abs(smallerThan.^k(3)-gammainc(smallerThan./2,k(3),'lower')), '--k')
+grid on;
+lgd=legend('$P(||h||^2<x)$', '$x^3$' );
+set(lgd,'Interpreter','latex');
