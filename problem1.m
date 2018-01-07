@@ -3,15 +3,17 @@ clear
 
 %% 1.
 sigma_w2 = 6;
-Mont = 1e6;
+Mont = 1e4;
 SNR_max = 66;
 Error_sum = zeros(1,length(0:3:SNR_max));
+
+for i = 0:15
+    const(i+1) = pammod(i,16);
+end
 
 for SNR = 0:3:SNR_max
     P = 10^(SNR/10)*sigma_w2;
     theta = 1/sqrt((16^2-1)/3)*sqrt(P);
-    const = [-15 -13 -11 -9 -7 -5 -3 -1 1 3 5 7 9 11 13 15];
-    Err = 0;
     for k = 1:Mont
         H = (randn(1,2)+1i*randn(1,2))/sqrt(2);
 
@@ -56,19 +58,22 @@ semilogy(0:3:SNR_max,P_err)
 hold on
 snr_lin = 10.^((0:3:SNR_max)./10);
 %semilogy(0:3:SNR_max,2*qfunc(sqrt(snr_lin./2)./4),'r');
-% semilogy(0:3:SNR_max,(2+snr_lin).^(-1),'r');
-[ber,ser] = berfading(0:3:SNR_max,'pam',16,1);
+%semilogy(0:3:SNR_max,(2+snr_lin).^(-1),'r');
+%NOT SURE ABOUT THIS, the function assumes H having variance 1 in the real
+%domain, which is does not. So we have SNR*1/2 in linear scale, this is the
+%same as SNR + 10log(1/2) in dB scale.
+[ber,ser] = berfading((-10*log(2):3:SNR_max-10*log(2)),'pam',16,1);
 semilogy(0:3:SNR_max,ser,'r')
-legend('Empirical P_err','Theoretical P_err')
+legend('Empirical P_{err}','Theoretical P_{err}')
 title('Problem 1, 1. 16-PAM')
 xlabel('SNR [dB]')
-ylabel('SER')
+ylabel('P_{err}')
 
 
 %% 2.
 clear
 sigma_w2 = 6;
-Mont = 1e6;
+Mont = 1e4;
 SNR_max = 54;
 Error_sum = zeros(1,length(0:3:SNR_max));
 %R = [1 1; 1 -1];
@@ -85,7 +90,7 @@ for SNR = 0:3:SNR_max
     for k = 1:Mont
         H = (randn(1,2)+1i*randn(1,2))/sqrt(2);
 
-        %% 1. 16-PAM
+        %% 2. 16-QAM
         
         %In our opinion, there is no need for rotation in this simulation
         %since there is no repetition in sending rotated codewords and
@@ -130,9 +135,9 @@ semilogy(0:3:SNR_max,P_err)
 hold on
 [ber,ser] = berfading(0:3:SNR_max,'qam',16,1);
 semilogy(0:3:SNR_max,ser,'r')
-legend('Empirical P_err','Theoretical P_err')
+legend('Empirical P_{err}','Theoretical P_{err}')
 title('Problem 1, 2. 16-QAM')
 xlabel('SNR [dB]')
-ylabel('SER')
+ylabel('P_{err}')
 %%
 
