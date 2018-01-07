@@ -121,10 +121,10 @@ for SNR = 0:3:SNR_max
         end
         s1_hat = const(idx1+1);
         s2_hat = const(idx2+1);
-        Error_sum(SNR/3+1) = Error_sum(SNR/3+1) + (s1_hat~=s1 || s2_hat~=s2);
+        Error_sum(SNR/3+1) = Error_sum(SNR/3+1) + (s1_hat~=s1) + (s2_hat~=s2);
     end
 end
-P_err = Error_sum/Mont;
+P_err = Error_sum./(2*Mont);
 figure('NumberTitle','off','Name','Problem 1, 2.')
 semilogy(0:3:SNR_max,P_err)
 hold on
