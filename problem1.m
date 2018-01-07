@@ -3,8 +3,8 @@ clear
 
 %% 1.
 sigma_w2 = 6;
-Mont = 1e4;
-SNR_max = 70;
+Mont = 1e6;
+SNR_max = 66;
 Error_sum = zeros(1,length(0:3:SNR_max));
 
 for SNR = 0:3:SNR_max
@@ -56,16 +56,23 @@ semilogy(0:3:SNR_max,P_err)
 hold on
 snr_lin = 10.^((0:3:SNR_max)./10);
 %semilogy(0:3:SNR_max,2*qfunc(sqrt(snr_lin./2)./4),'r');
-semilogy(0:3:SNR_max,(2+snr_lin).^(-1),'r');
+% semilogy(0:3:SNR_max,(2+snr_lin).^(-1),'r');
+[ber,ser] = berfading(0:3:SNR_max,'pam',16,1);
+semilogy(0:3:SNR_max,ser,'r')
+legend('Empirical P_err','Theoretical P_err')
+title('Problem 1, 1. 16-PAM')
+xlabel('SNR [dB]')
+ylabel('SER')
 
 
 %% 2.
 clear
 sigma_w2 = 6;
-Mont = 1e4;
-SNR_max = 70;
+Mont = 1e6;
+SNR_max = 54;
 Error_sum = zeros(1,length(0:3:SNR_max));
-R = [1 1; 1 -1];
+%R = [1 1; 1 -1];
+R = [1 + 1i, 1 + 1i; -1 + 1i, 1 - 1i];
 R_inv = pinv(R);
 for i = 0:15
     const(i+1) = qammod(i,16);
@@ -120,5 +127,12 @@ end
 P_err = Error_sum/Mont;
 figure('NumberTitle','off','Name','Problem 1, 2.')
 semilogy(0:3:SNR_max,P_err)
+hold on
+[ber,ser] = berfading(0:3:SNR_max,'qam',16,1);
+semilogy(0:3:SNR_max,ser,'r')
+legend('Empirical P_err','Theoretical P_err')
+title('Problem 1, 2. 16-QAM')
+xlabel('SNR [dB]')
+ylabel('SER')
 %%
 
