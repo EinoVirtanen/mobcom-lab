@@ -3,23 +3,20 @@ clear
 
 %% 1.
 sigma_w2 = 6;
-Mont = 1e4;
+Mont = 1e6;
 SNR_max = 66;
-Error_sum = zeros(1,length(0:3:SNR_max));
-
+SNR_start = -9;
+SNR_step = 3;
+Error_sum = zeros(1,length(SNR_start:SNR_step:SNR_max));
 for i = 0:15
     const(i+1) = pammod(i,16);
 end
-
-for SNR = 0:3:SNR_max
+for SNR = SNR_start:SNR_step:SNR_max
     P = 10^(SNR/10)*sigma_w2;
     theta = 1/sqrt((16^2-1)/3)*sqrt(P);
     for k = 1:Mont
         H = (randn(1,2)+1i*randn(1,2))/sqrt(2);
-
         %% 1. 16-PAM
-        
-        
         s1 = const(randperm(16,1));
         s2 = const(randperm(16,1));
 
@@ -49,55 +46,43 @@ for SNR = 0:3:SNR_max
         end
         x1_hat = const(idx1);
         x2_hat = const(idx2);
-        Error_sum(SNR/3+1) = Error_sum(SNR/3+1) + ((x1_hat~=s1) + (x2_hat~=s2));
+        Error_sum((SNR-SNR_start)/SNR_step+1) = Error_sum((SNR-SNR_start)/SNR_step+1) + ((x1_hat~=s1) + (x2_hat~=s2));
     end
 end
 P_err = Error_sum./(2*Mont);
 figure('NumberTitle','off','Name','Problem 1, 1.')
-semilogy(0:3:SNR_max,P_err)
+semilogy(SNR_start:SNR_step:SNR_max,P_err)
 hold on
-snr_lin = 10.^((0:3:SNR_max)./10);
-%semilogy(0:3:SNR_max,2*qfunc(sqrt(snr_lin./2)./4),'r');
-%semilogy(0:3:SNR_max,(2+snr_lin).^(-1),'r');
-%NOT SURE ABOUT THIS, the function assumes H having variance 1 in the real
-%domain, which is does not. So we have SNR*1/2 in linear scale, this is the
-%same as SNR + 10log(1/2) in dB scale.
-[ber,ser] = berfading((-10*log(2):3:SNR_max-10*log(2)),'pam',16,1);
-semilogy(0:3:SNR_max,ser,'r')
+[ber,ser] = berfading((SNR_start-10*log(2):SNR_step:SNR_max-10*log(2)),'pam',16,1);
+semilogy(SNR_start:SNR_step:SNR_max,ser,'r')
 legend('Empirical P_{err}','Theoretical P_{err}')
-title('Problem 1, 1. 16-PAM')
 xlabel('SNR [dB]')
 ylabel('P_{err}')
-
-
+xlim([SNR_start SNR_max])
+grid on
 %% 2.
 clear
 sigma_w2 = 6;
-Mont = 1e4;
+Mont = 1e6;
 SNR_max = 54;
-Error_sum = zeros(1,length(0:3:SNR_max));
-%R = [1 1; 1 -1];
-R = [1 + 1i, 1 + 1i; -1 + 1i, 1 - 1i];
+SNR_start = -21;
+SNR_step = 3;
+Error_sum = zeros(1,length(SNR_start:SNR_step:SNR_max));
+R = [1 + 1i, 1 + 1i; -1 + 1i, 1 - 1i]./sqrt(2);
 R_inv = pinv(R);
 for i = 0:15
     const(i+1) = qammod(i,16);
 end
-
-for SNR = 0:3:SNR_max
+for SNR = SNR_start:SNR_step:SNR_max
     P = 10^(SNR/10)*sigma_w2;
     theta = 1/sqrt(10)*sqrt(P);
     Err = 0;
     for k = 1:Mont
         H = (randn(1,2)+1i*randn(1,2))/sqrt(2);
-
         %% 2. 16-QAM
-        
-        %In our opinion, there is no need for rotation in this simulation
-        %since there is no repetition in sending rotated codewords and
-        %we are only interested in the number of errors.
         s1 = const(randperm(16,1));
         s2 = const(randperm(16,1));
-
+        
         x = [s1 s2]*R;
 
         n = ((randn(1,2)+1i*randn(1,2))/sqrt(2))*sqrt(sigma_w2);
@@ -126,18 +111,17 @@ for SNR = 0:3:SNR_max
         end
         s1_hat = const(idx1+1);
         s2_hat = const(idx2+1);
-        Error_sum(SNR/3+1) = Error_sum(SNR/3+1) + (s1_hat~=s1) + (s2_hat~=s2);
+        Error_sum((SNR-SNR_start)/SNR_step+1) = Error_sum((SNR-SNR_start)/SNR_step+1) + (s1_hat~=s1) + (s2_hat~=s2);
     end
 end
 P_err = Error_sum./(2*Mont);
 figure('NumberTitle','off','Name','Problem 1, 2.')
-semilogy(0:3:SNR_max,P_err)
+semilogy(SNR_start:SNR_step:SNR_max,P_err)
 hold on
-[ber,ser] = berfading(0:3:SNR_max,'qam',16,1);
-semilogy(0:3:SNR_max,ser,'r')
+[ber,ser] = berfading(SNR_start:SNR_step:SNR_max,'qam',32,1);
+semilogy(SNR_start:SNR_step:SNR_max,ser,'r')
 legend('Empirical P_{err}','Theoretical P_{err}')
-title('Problem 1, 2. 16-QAM')
 xlabel('SNR [dB]')
 ylabel('P_{err}')
-%%
-
+xlim([SNR_start SNR_max])
+grid on
